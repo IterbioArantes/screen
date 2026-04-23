@@ -30,9 +30,6 @@ public class Principal {
     @Value("${omdb.api.key}")
     private String API_KEY;
 
-    private final List<Serie> seriesList = new ArrayList<>();
-
-
     public void exibeMenu() {
         var opcao = -1;
 
@@ -60,7 +57,6 @@ public class Principal {
     private void buscarSerieWeb() {
         DadosSerie dados = getDadosSerie();
         Serie serie = new Serie(dados,chatGPT.obterTraducao(dados.sinopse()));
-        seriesList.add(serie);
         serviceRepository.save(serie);
         System.out.println(serie);
     }
@@ -87,6 +83,7 @@ public class Principal {
 
     private void listarSeriesBuscadas(){
 
+        List<Serie> seriesList = serviceRepository.findAll();
         seriesList.stream().sorted(Comparator.comparing(Serie::getGeneroPrincipal)).forEach(System.out::println);
     }
 }
