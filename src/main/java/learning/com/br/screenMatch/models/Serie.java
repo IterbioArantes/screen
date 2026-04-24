@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import learning.com.br.screenMatch.services.ConsultaChatGPT;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class Serie {
     private String poster;
     private String sinopse;
 
-    @Transient
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL)
     private List<Episodio> episodioList = new ArrayList<>();
 
     public Serie(DadosSerie dadosSerie, String sinopse) {
@@ -49,4 +50,10 @@ public class Serie {
             return null;
         }
     }
+
+    public void adicionarEpisodios(Episodio episodio){
+        episodio.setSerie(this);
+        this.episodioList.add(episodio);
+    }
+
 }
