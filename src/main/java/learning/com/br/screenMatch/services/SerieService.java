@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +26,14 @@ public class SerieService {
 
     public List<Serie> findAllComEpisodios() {
         return repository.findAllComEpisodios();
+    }
+
+    public Optional<Serie> findByTituloEqualsIgnoreCase(String nomeSerie){
+        return repository.findByTituloEqualsIgnoreCase(nomeSerie);
+    }
+
+    public List<Serie> findByAtoresContainingIgnoreCase(String nomeAtor){
+        return repository.findByAtoresContainingIgnoreCase(nomeAtor);
     }
 
     @Transactional

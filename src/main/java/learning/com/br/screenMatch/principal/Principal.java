@@ -39,6 +39,8 @@ public class Principal {
                 1 - Buscar séries
                 2 - Buscar episódios
                 3 - Lista séries buscadas
+                4 - Buscar série por nome
+                5 - Buscar série por ator
                 0 - Sair                                 
                 """;
 
@@ -49,6 +51,8 @@ public class Principal {
                 case 1 -> buscarSerieWeb();
                 case 2 -> buscarEpisodioPorSerie();
                 case 3 -> listarSeriesBuscadas();
+                case 4 -> buscarSeriePorNome();
+                case 5 -> buscarSeriePorAtor();
                 case 0 -> System.out.println("Saindo...");
                 default -> System.out.println("Opção inválida");
             }
@@ -81,7 +85,7 @@ public class Principal {
             System.out.println("Escolha a serie: ");
             String serieName = sc.nextLine();
 
-            Optional<Serie> optSerie = seriesList.stream().filter(x -> serieName.equalsIgnoreCase(x.getTitulo())).findAny();
+            Optional<Serie> optSerie = seriesList.stream().filter(x -> serieName.equalsIgnoreCase(x.getTitulo())).findFirst();
 
             if (optSerie.isPresent()){
 
@@ -106,6 +110,33 @@ public class Principal {
                 System.out.println("Série não disponivel. Tente novamente.");
             }
 
+        }
+    }
+
+    private void buscarSeriePorNome(){
+
+        System.out.println("Escolha uma série pelo nome: ");
+        String serieBuscada = sc.nextLine();
+        Optional<Serie> serieEncontrada = serieService.findByTituloEqualsIgnoreCase(serieBuscada);
+
+        if(serieEncontrada.isPresent()){
+            System.out.println(serieEncontrada.get());
+        }else{
+            System.out.println("Série nao encontrada");
+        }
+    }
+
+    private void buscarSeriePorAtor(){
+
+        System.out.println("Escolha uma série pelo ator: ");
+        String atorBuscado = sc.nextLine();
+
+        List<Serie> serieEncontrada = serieService.findByAtoresContainingIgnoreCase(atorBuscado);
+
+        if(!serieEncontrada.isEmpty()){
+            serieEncontrada.forEach(x-> System.out.println("Ator: " + x.getAtores() + "Nome da Série: " + x.getTitulo() + " | Avaliação: " + x.getAvaliacao()));
+        }else{
+            System.out.println("Nenhuma série com esse ator");
         }
     }
 
