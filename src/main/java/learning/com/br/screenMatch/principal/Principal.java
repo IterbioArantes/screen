@@ -41,6 +41,8 @@ public class Principal {
                 3 - Lista séries buscadas
                 4 - Buscar série por nome
                 5 - Buscar série por ator
+                6 - Top 5 séries
+                7 - Buscar Serie por categoria
                 0 - Sair                                 
                 """;
 
@@ -53,6 +55,8 @@ public class Principal {
                 case 3 -> listarSeriesBuscadas();
                 case 4 -> buscarSeriePorNome();
                 case 5 -> buscarSeriePorAtor();
+                case 6 -> buscarTopFiveSeries();
+                case 7 -> buscarSeriePorCategoria();
                 case 0 -> System.out.println("Saindo...");
                 default -> System.out.println("Opção inválida");
             }
@@ -144,5 +148,28 @@ public class Principal {
 
         seriesList = serieService.findAllComEpisodios();
         seriesList.stream().sorted(Comparator.comparing(Serie::getGeneroPrincipal)).forEach(System.out::println);
+    }
+
+    private void buscarTopFiveSeries(){
+
+        List<Serie> serieTop = serieService.findTop5ByOrderByAvaliacaoDesc();
+
+        serieTop.forEach(x-> System.out.println("Nome da Série: " + x.getTitulo() + " | Avaliação: " + x.getAvaliacao()));
+    }
+
+    private void buscarSeriePorCategoria(){
+
+        System.out.println("Digite uma categoria: ");
+        String categoriaBuscada = sc.nextLine();
+
+        Categoria cat = Categoria.categoriaPrincipalPtbr(categoriaBuscada);
+
+        if(cat != Categoria.NA){
+            List<Serie> seriePorCategoria = serieService.findByGeneroPrincipal(cat);
+
+            seriePorCategoria.forEach(x-> System.out.println("Nome da Série: " + x.getTitulo() + " | Avaliação: " + x.getGeneroPrincipal()));
+        }else{
+            System.out.println("Serie não encontrada para esta categoria");
+        }
     }
 }

@@ -1,5 +1,6 @@
 package learning.com.br.screenMatch.repository;
 
+import learning.com.br.screenMatch.models.Categoria;
 import learning.com.br.screenMatch.models.Serie;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +18,9 @@ public interface SerieRepository extends JpaRepository<Serie,Long> {
     Optional<Serie> findByTituloEqualsIgnoreCase(String nomeSerie);
 
     List<Serie> findByAtoresContainingIgnoreCase(String nomeAtor);
+
+    List<Serie> findTop5ByOrderByAvaliacaoDesc();
+
+    List<Serie> findByGeneroPrincipal(Categoria categoriaBuscada);
 }
 

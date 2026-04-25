@@ -1,6 +1,7 @@
 package learning.com.br.screenMatch.services;
 
 import jakarta.transaction.Transactional;
+import learning.com.br.screenMatch.models.Categoria;
 import learning.com.br.screenMatch.models.Episodio;
 import learning.com.br.screenMatch.models.Serie;
 import learning.com.br.screenMatch.repository.SerieRepository;
@@ -41,5 +42,13 @@ public class SerieService {
         Serie serie = repository.findById(serieId).orElseThrow();
 
         episodioList.forEach(serie::adicionarEpisodios);
+    }
+
+    public List<Serie> findTop5ByOrderByAvaliacaoDesc() {
+        return repository.findTop5ByOrderByAvaliacaoDesc();
+    }
+
+    public List<Serie> findByGeneroPrincipal(Categoria categoriaBuscada) {
+        return repository.findByGeneroPrincipal(categoriaBuscada);
     }
 }
