@@ -1,6 +1,7 @@
 package learning.com.br.screenMatch.repository;
 
 import learning.com.br.screenMatch.models.Categoria;
+import learning.com.br.screenMatch.models.Episodio;
 import learning.com.br.screenMatch.models.Serie;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,5 +23,11 @@ public interface SerieRepository extends JpaRepository<Serie,Long> {
     List<Serie> findTop5ByOrderByAvaliacaoDesc();
 
     List<Serie> findByGeneroPrincipal(Categoria categoriaBuscada);
+
+    @Query("SELECT e FROM Serie s JOIN s.episodioList e WHERE e.titulo ILIKE %:trechoEp%")
+    List<Episodio> findEpByString(String trechoEp);
+
+    @Query("SELECT e FROM Serie s JOIN s.episodioList e WHERE s=:serie AND e.avaliacao IS NOT null ORDER BY e.avaliacao DESC LIMIT 5")
+    List<Episodio> topFiveEpPorSerie(Serie serie);
 }
 

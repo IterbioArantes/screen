@@ -43,6 +43,8 @@ public class Principal {
                 5 - Buscar série por ator
                 6 - Top 5 séries
                 7 - Buscar Serie por categoria
+                8 - Buscar por episodios
+                9 - Top episodios por Serie
                 0 - Sair                                 
                 """;
 
@@ -53,10 +55,19 @@ public class Principal {
                 case 1 -> buscarSerieWeb();
                 case 2 -> buscarEpisodioPorSerie();
                 case 3 -> listarSeriesBuscadas();
-                case 4 -> buscarSeriePorNome();
+                case 4 -> {
+                    Optional<Serie> serieEncontrada = buscarSeriePorNome();
+                    if(serieEncontrada.isPresent()){
+                        System.out.println(serieEncontrada.get());
+                    }else{
+                        System.out.println("Série nao encontrada");
+                    }
+                }
                 case 5 -> buscarSeriePorAtor();
                 case 6 -> buscarTopFiveSeries();
                 case 7 -> buscarSeriePorCategoria();
+                case 8 -> buscarEpProTrecho();
+                case 9 -> topFiveEpPorSerie();
                 case 0 -> System.out.println("Saindo...");
                 default -> System.out.println("Opção inválida");
             }
@@ -117,17 +128,12 @@ public class Principal {
         }
     }
 
-    private void buscarSeriePorNome(){
+    private Optional<Serie> buscarSeriePorNome(){
 
         System.out.println("Escolha uma série pelo nome: ");
         String serieBuscada = sc.nextLine();
-        Optional<Serie> serieEncontrada = serieService.findByTituloEqualsIgnoreCase(serieBuscada);
 
-        if(serieEncontrada.isPresent()){
-            System.out.println(serieEncontrada.get());
-        }else{
-            System.out.println("Série nao encontrada");
-        }
+        return serieService.findByTituloEqualsIgnoreCase(serieBuscada);
     }
 
     private void buscarSeriePorAtor(){
@@ -170,6 +176,29 @@ public class Principal {
             seriePorCategoria.forEach(x-> System.out.println("Nome da Série: " + x.getTitulo() + " | Avaliação: " + x.getGeneroPrincipal()));
         }else{
             System.out.println("Serie não encontrada para esta categoria");
+        }
+    }
+
+    private void buscarEpProTrecho(){
+        System.out.println("Digite o nome do episodio: ");
+
+        String trechoEp = sc.nextLine();
+
+        List<Episodio> episodioList = serieService.findEpByString(trechoEp);
+
+        episodioList.forEach(System.out::println);
+    }
+
+    private void topFiveEpPorSerie(){
+
+        Optional<Serie> serieBuscada = buscarSeriePorNome();
+
+        if(serieBuscada.isPresent()){
+
+            List<Episodio> episodioList = serieService.topFiveEpPorSerie(serieBuscada.get());
+            episodioList.forEach(System.out::println);
+        }else{
+            System.out.println("Série nao encontrada");
         }
     }
 }

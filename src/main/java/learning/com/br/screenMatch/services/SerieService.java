@@ -51,4 +51,15 @@ public class SerieService {
     public List<Serie> findByGeneroPrincipal(Categoria categoriaBuscada) {
         return repository.findByGeneroPrincipal(categoriaBuscada);
     }
+
+
+    public List<Episodio> findEpByString(String trechoEp) {
+        return repository.findEpByString(trechoEp);
+
+
+    }
+
+    public List<Episodio> topFiveEpPorSerie(Serie serie) {
+        return repository.topFiveEpPorSerie(serie);
+    }
 }
