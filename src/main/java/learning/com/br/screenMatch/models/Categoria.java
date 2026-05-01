@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 
 
 public enum Categoria {
-    ACAO("Action","acao"),
+    ACAO("Action","ação"),
     ROMANCE("Romance","romance"),
-    COMEDIA("Comedy","comedia"),
+    COMEDIA("Comedy","comédia"),
     DRAMA("Drama","drama"),
     CRIME("Crime","crime"),
     NA("N/A","");

@@ -28,6 +28,13 @@ public interface SerieRepository extends JpaRepository<Serie,Long> {
     List<Episodio> findEpByString(String trechoEp);
 
     @Query("SELECT e FROM Serie s JOIN s.episodioList e WHERE s=:serie AND e.avaliacao IS NOT null ORDER BY e.avaliacao DESC LIMIT 5")
-    List<Episodio> topFiveEpPorSerie(Serie serie);
+    List<Episodio> top5EpPorSerie(Serie serie);
+
+    @Query("SELECT s FROM Serie s JOIN s.episodioList e GROUP BY s ORDER BY MAX(e.dataLancamento) DESC LIMIT 5")
+    List<Serie> top5SeriesPorLancamento();
+
+    @Query("SELECT e FROM Episodio e WHERE e.serie.id = :id AND e.temporada = :temp")
+    List<Episodio> obterTemporadaSerie(Long id, Integer temp);
 }
+
 

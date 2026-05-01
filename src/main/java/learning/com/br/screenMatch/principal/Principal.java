@@ -64,7 +64,7 @@ public class Principal {
                     }
                 }
                 case 5 -> buscarSeriePorAtor();
-                case 6 -> buscarTopFiveSeries();
+                case 6 -> System.out.println("Not implemented");
                 case 7 -> buscarSeriePorCategoria();
                 case 8 -> buscarEpProTrecho();
                 case 9 -> topFiveEpPorSerie();
@@ -156,12 +156,6 @@ public class Principal {
         seriesList.stream().sorted(Comparator.comparing(Serie::getGeneroPrincipal)).forEach(System.out::println);
     }
 
-    private void buscarTopFiveSeries(){
-
-        List<Serie> serieTop = serieService.findTop5ByOrderByAvaliacaoDesc();
-
-        serieTop.forEach(x-> System.out.println("Nome da Série: " + x.getTitulo() + " | Avaliação: " + x.getAvaliacao()));
-    }
 
     private void buscarSeriePorCategoria(){
 
@@ -195,7 +189,7 @@ public class Principal {
 
         if(serieBuscada.isPresent()){
 
-            List<Episodio> episodioList = serieService.topFiveEpPorSerie(serieBuscada.get());
+            List<Episodio> episodioList = serieService.top5EpPorSerie(serieBuscada.get());
             episodioList.forEach(System.out::println);
         }else{
             System.out.println("Série nao encontrada");

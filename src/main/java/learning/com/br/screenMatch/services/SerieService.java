@@ -1,6 +1,8 @@
 package learning.com.br.screenMatch.services;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+import learning.com.br.screenMatch.dto.EpisodioDTO;
+import learning.com.br.screenMatch.dto.SerieDTO;
 import learning.com.br.screenMatch.models.Categoria;
 import learning.com.br.screenMatch.models.Episodio;
 import learning.com.br.screenMatch.models.Serie;
@@ -21,8 +23,9 @@ public class SerieService {
         return repository.save(serie);
     }
 
-    public List<Serie> findAll() {
-        return repository.findAll();
+    public List<SerieDTO> findAll() {
+
+        return repository.findAll().stream().map(this::toDto).toList();
     }
 
     public List<Serie> findAllComEpisodios() {
@@ -44,8 +47,9 @@ public class SerieService {
         episodioList.forEach(serie::adicionarEpisodios);
     }
 
-    public List<Serie> findTop5ByOrderByAvaliacaoDesc() {
-        return repository.findTop5ByOrderByAvaliacaoDesc();
+    public List<SerieDTO> findTop5ByOrderByAvaliacaoDesc() {
+
+        return repository.findTop5ByOrderByAvaliacaoDesc().stream().map(this::toDto).toList();
     }
 
     public List<Serie> findByGeneroPrincipal(Categoria categoriaBuscada) {
@@ -59,7 +63,52 @@ public class SerieService {
 
     }
 
-    public List<Episodio> topFiveEpPorSerie(Serie serie) {
-        return repository.topFiveEpPorSerie(serie);
+    public List<Episodio> top5EpPorSerie(Serie serie) {
+        return repository.top5EpPorSerie(serie);
     }
+
+    public List<SerieDTO> top5SeriesPorLancamento(){
+        return repository.top5SeriesPorLancamento().stream().map(this::toDto).toList();
+    }
+
+    public SerieDTO obterPorId(Long id) {
+        return toDto(repository.findById(id).orElseThrow());
+    }
+
+    @Transactional(readOnly = true)
+    public List<EpisodioDTO> obterEpsSerie(Long id) {
+        Serie serie = repository.findById(id).orElseThrow();
+
+        return serie.getEpisodioList().stream()
+                .map(e-> new EpisodioDTO(e.getTemporada(), e.getTitulo(), e.getNumero()))
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<EpisodioDTO> obterTemporadaSerie(Long id, Integer temp) {
+        List<Episodio> episodioList= repository.obterTemporadaSerie(id, temp);
+        return episodioList.stream()
+                .map(e-> new EpisodioDTO(e.getTemporada(), e.getTitulo(), e.getNumero()))
+                .toList();
+    }
+
+    public List<SerieDTO> seriesPorCateggoria(String genero) {
+        Categoria categoria = Categoria.categoriaPrincipalPtbr(genero);
+        return repository.findByGeneroPrincipal(categoria).stream()
+                .map(this::toDto).toList();
+    }
+
+
+    private SerieDTO toDto(Serie serie){
+        return new SerieDTO(serie.getId(),
+                serie.getTitulo(),
+                serie.getGeneroPrincipal(),
+                serie.getTotalTemporadas(),
+                serie.getAvaliacao(),
+                serie.getAtores(),
+                serie.getPoster(),
+                serie.getSinopse());
+    }
+
+
 }
